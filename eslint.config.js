@@ -1,0 +1,33 @@
+import js from "@eslint/js";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import { defineConfig, globalIgnores } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+
+export default defineConfig([
+  globalIgnores(["dist"]),
+  {
+    files: ["**/*.{ts,tsx}"],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+      "no-unused-vars": "off",
+      "no-undef": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+  },
+]);

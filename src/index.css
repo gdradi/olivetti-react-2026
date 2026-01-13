@@ -1,0 +1,23 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #f0f0f0;
+  background-color: #1a1a1a;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 4rem;
+}
