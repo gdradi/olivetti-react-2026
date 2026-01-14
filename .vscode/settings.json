@@ -1,0 +1,64 @@
+{
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "editor.formatOnSave": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifierEnding": "auto",
+  "javascript.preferences.importModuleSpecifierEnding": "auto",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+  "[typescript]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "i18n-ally.localesPaths": ["apps/web/src/i18n", "packages/ui/src/i18n"],
+  "i18n-ally.enabledFrameworks": ["react", "i18next"],
+  "i18n-ally.sourceLanguage": "english",
+  "i18n-ally.displayLanguage": "italian",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": true,
+  "tailwindCSS.rootFontSize": 10
+}
