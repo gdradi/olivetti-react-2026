@@ -22,6 +22,7 @@ export default defineConfig([
       "react/prop-types": "off",
       "no-unused-vars": "off",
       "no-undef": "warn",
+      "prefer-const": "off",
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-empty-object-type": "off",
     },
