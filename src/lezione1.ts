@@ -23,7 +23,7 @@ const array4 = array3;
 console.log("array3", array3);
 console.log("array4", array4);
 // array3 = [4, 7];
-array4.push(8);
+array3.push(8);
 console.log("array3", array3);
 console.log("array4", array4);
 

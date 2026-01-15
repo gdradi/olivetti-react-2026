@@ -2,7 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app";
 import "./index.css";
-import "./lezione1";
+// import "./lezione1";
+import "./lezione2";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -10,4 +11,4 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>
 );
 
-console.log("hello world!");
+// console.log("hello world!");
