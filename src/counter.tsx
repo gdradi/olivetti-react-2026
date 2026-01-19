@@ -1,6 +1,11 @@
 import { useState } from "react";
 
 export function Counter() {
+  // Lo stato di un componente è privato e isolato per quel componente
+  // se utilizzo due <Counter />, il loro stato non è nè condiviso nè sincronizzato
+  //
+  // lo stato deve essere obbligatoriamente definito nel corpo della funzione,
+  // non dentro degli if, delle funzioni, o qualsiasi altra cosa
   const [value, setValue] = useState(0);
 
   return (

@@ -1,9 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Counter } from "./counter";
 import "./index.css";
-import { Input } from "./input";
-import { Point } from "./point";
+import { TicTacToe } from "./tictactoe";
 // import "./lezione1";
 // import "./lezione2";
 
@@ -16,9 +14,15 @@ createRoot(rootDomNode).render(
   <StrictMode>
     {/* <App /> */}
     {/* <HelloWorld /> */}
-    <Point />
+    {/* <Point /> */}
+    {/* <Counter />
     <Counter />
-    <Input />
+    <Counter />
+    <Counter />
+    <Counter />
+    <Counter /> */}
+    {/* <Input /> */}
+    <TicTacToe />
     {/* <ListVisualizer /> */}
   </StrictMode>
 );
