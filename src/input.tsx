@@ -15,7 +15,19 @@ export function Input() {
         style={{
           width: 140,
         }}
+        /**
+         * Passando value come props,
+         * stiamo decidendo noi che cosa l'input
+         * deve visualizzare.
+         * In questo caso si dice che l'input è
+         *   completamente controllato
+         *
+         * Se invece non passiamo value,
+         * l'input decide in autonomia che cosa visualizzare
+         */
+        value={text}
         onChange={(ev) => {
+          // ev.target.value contiene il valore digitato
           const partialText = ev.target.value;
           console.log(partialText);
           setText(partialText);
@@ -24,6 +36,13 @@ export function Input() {
       <div>
         Testo digitato: <span>{text}</span>
       </div>
+      <button
+        onClick={() => {
+          setText("");
+        }}
+      >
+        X
+      </button>
     </div>
   );
 }

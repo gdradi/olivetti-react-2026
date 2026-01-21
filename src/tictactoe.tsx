@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Realizzare il gioco del Tris (Tic Tac Toe) in React
@@ -14,8 +14,34 @@ import { useState } from "react";
 type Board = Array<string | null>;
 
 export function TicTacToe() {
-  const [board, setBoard] = useState<Board>([null, null, null, null, null, null, null, null, null]);
-  const [currentPlayer, setCurrentPlayer] = useState("X");
+  /**
+   * Il valore iniziale degli stati "board" e "currentPlayer" deve essere scelto come segue:
+   *
+   * - se ho un valore precedentemente salvato nel local storage, allora uso quello
+   * - altrimenti, uso il valore di default (quindi una board vuota e il giocatore "X")
+   */
+  const boardStoredInLocalStorage = localStorage.getItem("ticTacToeBoard");
+  const currentPlayerStoredInLocalStorage = localStorage.getItem("ticTacToePlayer");
+  const [board, setBoard] = useState<Board>(
+    boardStoredInLocalStorage ? JSON.parse(boardStoredInLocalStorage) : [null, null, null, null, null, null, null, null, null]
+  );
+  /**
+   * Spiegazione operatore ??
+   * leggendo da sx a dx, se l'elemento esiste, viene considerato quello,
+   * altrimenti si procede verso destra finchè non si trova un elemento che esiste
+   */
+  const [currentPlayer, setCurrentPlayer] = useState(currentPlayerStoredInLocalStorage ?? "X");
+
+  /**
+   * Ogni volta che o board o currentPlayer cambiano, salvo i valori nel local storage
+   * in modo che, se l'utente ricarica la pagina o il componente viene rimontato, i due stati
+   * si inizializzino con il valore precedente
+   */
+  useEffect(() => {
+    const boardAsString = JSON.stringify(board);
+    localStorage.setItem("ticTacToeBoard", boardAsString);
+    localStorage.setItem("ticTacToePlayer", currentPlayer);
+  }, [board, currentPlayer]);
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>

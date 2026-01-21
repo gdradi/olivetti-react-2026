@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface C4Props {
   readonly x: number;
@@ -30,8 +30,23 @@ function C4(props: C4Props) {
 interface C3Props {
   readonly x: number;
 }
-function C3(props: C3Props) {
+export function C3(props: C3Props) {
   const { x } = props;
+
+  /**
+   * useEffect con array vuoto di dipendenze
+   * esegue la funzione passata in input solo al montaggio del componente
+   *
+   * Se specificate una funzione in return, allora questa funzione viene invocata
+   * all'unmount
+   */
+  useEffect(() => {
+    console.log("mount c3");
+    return () => {
+      console.log("unmount c3");
+    };
+  }, []);
+
   return (
     <div
       style={{
