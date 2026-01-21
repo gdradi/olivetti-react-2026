@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { TicTacToe } from "./tictactoe";
+import { C1 } from "./state-lift";
 // import "./lezione1";
 // import "./lezione2";
 
@@ -22,8 +22,9 @@ createRoot(rootDomNode).render(
     <Counter />
     <Counter /> */}
     {/* <Input /> */}
-    <TicTacToe />
+    {/* <TicTacToe /> */}
     {/* <ListVisualizer /> */}
+    <C1 />
   </StrictMode>
 );
 
