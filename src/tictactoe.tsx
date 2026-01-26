@@ -13,10 +13,10 @@ import { useEffect, useState } from "react";
 
 type Board = Array<string | null>;
 
-type PlayerMove = {
+interface PlayerMove {
   player: string;
   cellIndex: number;
-};
+}
 
 export function TicTacToe() {
   /**
@@ -47,9 +47,20 @@ export function TicTacToe() {
   //#region Variabili di appoggio e informazioni derivate
 
   // La funzione restituisce l'array di celle vincitrici, o null se non c'è un vincitore
-  const winningCells = checkWinner(board);
+  const winningCells = checkWinner(board); // ad esempio [0,4,8]
+
   // Per capire chi ha vinto, guardo cosa c'è in una qualsiasi delle celle vincitrici
+
+  //                                                  indice 1a cella vincitrice (es: 0)
+  //                                                          |
   const winner = winningCells == null ? null : board[winningCells[0]!];
+  //                                            ----------------------
+  //                                                    |
+  //                                               valore della prima cella vincitrice
+  console.log("board", board);
+  console.log("winning cells", winningCells);
+  console.log("winner", winner);
+  console.log("moves", moves);
 
   //#endregion
 
@@ -69,6 +80,21 @@ export function TicTacToe() {
     setBoard([null, null, null, null, null, null, null, null, null]);
     setCurrentPlayer("X");
     setMoves([]);
+  }
+
+  function goToMove(moveIndex: number) {
+    const newBoard: Board = [null, null, null, null, null, null, null, null, null];
+    for (let i = 0; i <= moveIndex; i++) {
+      const move = moves[i]!;
+      newBoard[move.cellIndex] = move.player;
+    }
+    setBoard(newBoard);
+    // Calcolo nuovo giocatore
+    const lastMove = moves[moveIndex]!;
+    setCurrentPlayer(lastMove.player === "X" ? "O" : "X");
+    // Calcolo nuova lista di mosse
+    const newMoves = moves.slice(0, moveIndex + 1);
+    setMoves(newMoves);
   }
 
   return (
@@ -93,8 +119,11 @@ export function TicTacToe() {
                 const newBoard = [...board];
                 newBoard[index] = currentPlayer;
                 setBoard(newBoard);
-                setMoves([...moves, { player: currentPlayer, cellIndex: index }]);
                 setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+
+                const newMove: PlayerMove = { player: currentPlayer, cellIndex: index };
+                const newMoves = moves.concat(newMove);
+                setMoves(newMoves);
               }}
             />
           ))}
@@ -103,7 +132,7 @@ export function TicTacToe() {
         <div>
           {winner && <Winner winner={winner} />}
           <CurrentPlayer currentPlayer={currentPlayer} />
-          <MoveList moves={moves} />
+          <MoveList moves={moves} goToMove={goToMove} />
           <Controls reset={reset} />
         </div>
       </div>
@@ -124,6 +153,9 @@ interface CellProps {
 
 function Cell(props: CellProps) {
   const { cell, onClick, disabled, isWinningCell } = props;
+
+  console.log("Cell", { cell, disabled, isWinningCell });
+
   return (
     <button
       // key={index}
@@ -215,23 +247,26 @@ function CurrentPlayer(props: CurrentPlayerProps) {
 interface MoveProps {
   readonly player: string;
   readonly cellIndex: number;
+  readonly onClick: () => void;
 }
 
 function Move(props: MoveProps) {
-  const { player, cellIndex } = props;
+  const { player, cellIndex, onClick } = props;
   return (
     <div className="box">
       {player}: {cellIndex}
+      <button onClick={onClick}>Torna qui</button>
     </div>
   );
 }
 
 interface MoveListProps {
   readonly moves: PlayerMove[];
+  readonly goToMove: (moveIndex: number) => void;
 }
 
 function MoveList(props: MoveListProps) {
-  const { moves } = props;
+  const { moves, goToMove } = props;
 
   return (
     <div className="box">
@@ -240,7 +275,17 @@ function MoveList(props: MoveListProps) {
         {moves.length === 0 ? (
           <p style={{ color: "#999" }}>Nessuna</p>
         ) : (
-          moves.map((move, index) => <Move key={index} player={move.player} cellIndex={move.cellIndex} />)
+          moves.map((move, index) => (
+            <Move
+              key={index}
+              player={move.player}
+              cellIndex={move.cellIndex}
+              onClick={() => {
+                console.log("Ho premuto sulla mossa", { index, move });
+                goToMove(index);
+              }}
+            />
+          ))
         )}
       </div>
     </div>
