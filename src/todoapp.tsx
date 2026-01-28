@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchTodos } from "./apis/fetch-todos";
+import { deleteTask, fetchTodos } from "./apis/fetch-todos";
 
-interface Task {
+export interface Task {
   readonly text: string;
   readonly isCompleted: boolean;
 }
@@ -11,6 +11,8 @@ export function TodoApp() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Funzione di appoggio asyncrona in cui scriviamo le nostre logiche
   const fetchTodosAndSet = async () => {
@@ -39,6 +41,19 @@ export function TodoApp() {
     }
   };
 
+  const deleteWithApi = async (task: Task, index: number) => {
+    setIsDeleting(true);
+    try {
+      const deleteResult = await deleteTask(task);
+      const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
+      setTasks(tasksWithoutThisTask);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   /**
    * Useeffect con array di dipendenze vuoto ([]) significa che
    * viene eseguito solo al montaggio del componente
@@ -46,7 +61,6 @@ export function TodoApp() {
   useEffect(() => {
     // Non si può passare una funzione async allo useEffect.
     // Quindi utilizziamo una funzione di appoggio (fetchTodosAndSet)
-
     fetchTodosAndSet();
   }, []);
 
@@ -111,9 +125,9 @@ export function TodoApp() {
               <div>
                 <button
                   onClick={() => {
-                    const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
-                    setTasks(tasksWithoutThisTask);
+                    deleteWithApi(task, index);
                   }}
+                  disabled={isDeleting}
                 >
                   Elimina
                 </button>
@@ -121,6 +135,7 @@ export function TodoApp() {
                   onClick={() => {
                     setEditingIndex(index);
                   }}
+                  disabled={isDeleting}
                 >
                   Modifica
                 </button>
