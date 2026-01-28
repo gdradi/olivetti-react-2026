@@ -2,6 +2,7 @@ import { useState } from "react";
 
 interface Task {
   readonly text: string;
+  readonly isCompleted: boolean;
 }
 
 export function TodoApp() {
@@ -12,23 +13,55 @@ export function TodoApp() {
     <div className="box">
       <h2>TodoApp</h2>
       {tasks.map((task, index) => (
-        <div key={index}>
-          {index + 1}. {task.text}
-          <button
-            onClick={() => {
-              const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
-              setTasks(tasksWithoutThisTask);
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <div
+            style={{
+              width: 50,
+              textAlign: "right",
             }}
           >
-            Elimina
-          </button>
-          <button
-            onClick={() => {
-              setEditingIndex(index);
+            {index + 1}.
+          </div>
+          <div
+            style={{
+              color: task.isCompleted ? "green" : "red",
+              fontSize: 8,
             }}
           >
-            Modifica
-          </button>
+            {task.isCompleted ? "V" : "X"}
+          </div>
+          <div
+            style={{
+              // width: 100,
+              flexGrow: 1,
+            }}
+          >
+            {task.text}
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
+                setTasks(tasksWithoutThisTask);
+              }}
+            >
+              Elimina
+            </button>
+            <button
+              onClick={() => {
+                setEditingIndex(index);
+              }}
+            >
+              Modifica
+            </button>
+          </div>
         </div>
       ))}
       <CreateTask
@@ -63,7 +96,7 @@ function CreateTask(props: CreateTaskProps) {
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
       <button
         onClick={() => {
-          const newTask: Task = { text: text };
+          const newTask: Task = { text: text, isCompleted: false };
           onClick(newTask);
           setText("");
         }}
@@ -81,13 +114,15 @@ interface EditTaskProps {
 function UpdateTask(props: EditTaskProps) {
   const { task, onTaskUpdated } = props;
   const [text, setText] = useState(task.text);
+  const [isCompleted, setIsCompleted] = useState(task.isCompleted);
   return (
     <div className="box">
       <div style={{ fontWeight: "bold" }}>UpdateTask</div>
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
+      <input type="checkbox" checked={isCompleted} onChange={(e) => setIsCompleted(e.target.checked)} />
       <button
         onClick={() => {
-          const newTask: Task = { text: text };
+          const newTask: Task = { text: text, isCompleted: isCompleted };
           onTaskUpdated(newTask);
           setText("");
         }}
