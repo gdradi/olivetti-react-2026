@@ -37,6 +37,7 @@ export function TodoApp() {
   useEffect(() => {
     // Non si può passare una funzione async allo useEffect.
     // Quindi utilizziamo una funzione di appoggio (fetchTodosAndSet)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTodosAndSet();
   }, []);
 
