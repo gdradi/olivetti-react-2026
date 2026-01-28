@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchTodos } from "./apis/fetch-todos";
 
 interface Task {
   readonly text: string;
@@ -8,77 +9,113 @@ interface Task {
 export function TodoApp() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Funzione di appoggio asyncrona in cui scriviamo le nostre logiche
+  const fetchTodosAndSet = async () => {
+    // Faccio partire la richiesta HTTP tramite la funzione fetchTodo
+    const data = await fetchTodos();
+    // Mappo i risultati nel modello di dati locale (Task)
+    const tasksFromApi = data.todos
+      .filter((t, index) => index < 10)
+      .map((t) => {
+        const mappedTask: Task = {
+          text: t.todo,
+          isCompleted: t.completed,
+        };
+        return mappedTask;
+      });
+    // Aggiorno la lista di task e setto il caricamento come completato
+    setIsLoading(false);
+    setTasks(tasksFromApi);
+  };
+
+  /**
+   * Useeffect con array di dipendenze vuoto ([]) significa che
+   * viene eseguito solo al montaggio del componente
+   */
+  useEffect(() => {
+    // Non si può passare una funzione async allo useEffect.
+    // Quindi utilizziamo una funzione di appoggio (fetchTodosAndSet)
+    fetchTodosAndSet();
+  }, []);
 
   return (
     <div className="box">
       <h2>TodoApp</h2>
-      {tasks.map((task, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <div
-            style={{
-              width: 50,
-              textAlign: "right",
-            }}
-          >
-            {index + 1}.
-          </div>
-          <div
-            style={{
-              color: task.isCompleted ? "green" : "red",
-              fontSize: 8,
-            }}
-          >
-            {task.isCompleted ? "V" : "X"}
-          </div>
-          <div
-            style={{
-              // width: 100,
-              flexGrow: 1,
-            }}
-          >
-            {task.text}
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
-                setTasks(tasksWithoutThisTask);
+      {isLoading === true ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          {tasks.map((task, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
               }}
             >
-              Elimina
-            </button>
-            <button
-              onClick={() => {
-                setEditingIndex(index);
+              <div
+                style={{
+                  width: 50,
+                  textAlign: "right",
+                }}
+              >
+                {index + 1}.
+              </div>
+              <div
+                style={{
+                  color: task.isCompleted ? "green" : "red",
+                  fontSize: 8,
+                }}
+              >
+                {task.isCompleted ? "V" : "X"}
+              </div>
+              <div
+                style={{
+                  // width: 100,
+                  flexGrow: 1,
+                }}
+              >
+                {task.text}
+              </div>
+              <div>
+                <button
+                  onClick={() => {
+                    const tasksWithoutThisTask = tasks.filter((task, i) => i !== index);
+                    setTasks(tasksWithoutThisTask);
+                  }}
+                >
+                  Elimina
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingIndex(index);
+                  }}
+                >
+                  Modifica
+                </button>
+              </div>
+            </div>
+          ))}
+          <CreateTask
+            onClick={(task) => {
+              const newList = tasks.concat(task);
+              setTasks(newList);
+            }}
+          />
+          {editingIndex !== null && (
+            <UpdateTask
+              task={tasks[editingIndex]!}
+              onTaskUpdated={(updatedTask) => {
+                const updatedTasks = tasks.map((task, index) => (index === editingIndex ? updatedTask : task));
+                setTasks(updatedTasks);
+                setEditingIndex(null);
               }}
-            >
-              Modifica
-            </button>
-          </div>
+            />
+          )}
         </div>
-      ))}
-      <CreateTask
-        onClick={(task) => {
-          const newList = tasks.concat(task);
-          setTasks(newList);
-        }}
-      />
-      {editingIndex !== null && (
-        <UpdateTask
-          task={tasks[editingIndex]!}
-          onTaskUpdated={(updatedTask) => {
-            const updatedTasks = tasks.map((task, index) => (index === editingIndex ? updatedTask : task));
-            setTasks(updatedTasks);
-            setEditingIndex(null);
-          }}
-        />
       )}
     </div>
   );
