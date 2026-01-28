@@ -10,24 +10,33 @@ export function TodoApp() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Funzione di appoggio asyncrona in cui scriviamo le nostre logiche
   const fetchTodosAndSet = async () => {
-    // Faccio partire la richiesta HTTP tramite la funzione fetchTodo
-    const data = await fetchTodos();
-    // Mappo i risultati nel modello di dati locale (Task)
-    const tasksFromApi = data.todos
-      .filter((t, index) => index < 10)
-      .map((t) => {
-        const mappedTask: Task = {
-          text: t.todo,
-          isCompleted: t.completed,
-        };
-        return mappedTask;
-      });
-    // Aggiorno la lista di task e setto il caricamento come completato
-    setIsLoading(false);
-    setTasks(tasksFromApi);
+    try {
+      setIsLoading(true);
+      // Faccio partire la richiesta HTTP tramite la funzione fetchTodo
+      const data = await fetchTodos();
+      // Mappo i risultati nel modello di dati locale (Task)
+      const tasksFromApi = data.todos
+        .filter((t, index) => index < 10)
+        .map((t) => {
+          const mappedTask: Task = {
+            text: t.todo,
+            isCompleted: t.completed,
+          };
+          return mappedTask;
+        });
+      // Aggiorno la lista di task
+      setTasks(tasksFromApi);
+    } catch (error) {
+      setError("Errore nel caricamento dei dati" + (error as Error).message);
+    } finally {
+      // Finally viene invocato sempre, sia che si completi il try con successo,
+      // sia che si è entrati nel catch
+      setIsLoading(false);
+    }
   };
 
   /**
@@ -37,15 +46,33 @@ export function TodoApp() {
   useEffect(() => {
     // Non si può passare una funzione async allo useEffect.
     // Quindi utilizziamo una funzione di appoggio (fetchTodosAndSet)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     fetchTodosAndSet();
   }, []);
 
   return (
     <div className="box">
       <h2>TodoApp</h2>
+      {/* Concatenazione di condizioni */}
+      {/* Sto caricando? 
+            => se si, mostro un messaggio di loading
+            => altrimenti, c'è un errore?
+              => se si, mostro il messaggio di errore
+              => altrimenti, mostro la lista di task
+      */}
+      {isLoading === false && (
+        <button
+          onClick={() => {
+            fetchTodosAndSet();
+          }}
+        >
+          Ricarica
+        </button>
+      )}
       {isLoading === true ? (
         <div>Loading...</div>
+      ) : error != null ? (
+        <div>{error}</div>
       ) : (
         <div>
           {tasks.map((task, index) => (
