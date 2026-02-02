@@ -1,5 +1,7 @@
+import { ConfigProvider } from "antd";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { fetchTodos } from "./apis/fetch-todos";
 import "./index.css";
 import { TodoApp } from "./todoapp";
 // import "./lezione1";
@@ -24,10 +26,33 @@ createRoot(rootDomNode).render(
     {/* <Input /> */}
     {/* <CountersWithEffect /> */}
     {/* <TicTacToe /> */}
-    <TodoApp />
+    {/* <TodoApp /> */}
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#00b96b",
+          borderRadius: 2,
+        },
+      }}
+    >
+      <TodoApp />
+    </ConfigProvider>
+
+    {/* <TodoList /> */}
     {/* <ListVisualizer /> */}
     {/* <C1 /> */}
   </StrictMode>
 );
 
 // console.log("hello world!");
+
+console.log("1");
+try {
+  const data = await fetchTodos();
+  console.log(data);
+} catch (e) {
+  // TODO cosa faccio?
+  console.error(e);
+}
+
+console.log("2");

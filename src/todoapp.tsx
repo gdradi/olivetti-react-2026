@@ -1,3 +1,5 @@
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Input } from "antd";
 import { createContext, useContext, useEffect, useState } from "react";
 import { deleteTask, fetchTodos } from "./apis/fetch-todos";
 
@@ -101,91 +103,105 @@ export function TodoApp() {
               => se si, mostro il messaggio di errore
               => altrimenti, mostro la lista di task
       */}
-          {isLoading === false && (
-            <button
-              onClick={() => {
-                fetchTodosAndSet();
-              }}
-            >
-              Ricarica
-            </button>
-          )}
-          {isLoading === true ? (
-            <div>Loading...</div>
-          ) : error != null ? (
+          <Button
+            type="primary"
+            onClick={() => {
+              fetchTodosAndSet();
+            }}
+            loading={isLoading}
+          >
+            Ricarica
+          </Button>
+
+          {error != null ? (
             <div>{error}</div>
           ) : (
-            <div>
-              {tasks.map((task, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                >
+            isLoading != true && (
+              <div>
+                {tasks.map((task, index) => (
                   <div
+                    key={index}
                     style={{
-                      width: 50,
-                      textAlign: "right",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
                     }}
                   >
-                    {index + 1}.
-                  </div>
-                  <div
-                    style={{
-                      color: task.isCompleted ? "green" : "red",
-                      fontSize: 8,
-                    }}
-                  >
-                    {task.isCompleted ? "V" : "X"}
-                  </div>
-                  <div
-                    style={{
-                      // width: 100,
-                      flexGrow: 1,
-                    }}
-                  >
-                    {task.text}
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => {
-                        deleteWithApi(task, index);
+                    <div
+                      style={{
+                        width: 50,
+                        textAlign: "right",
                       }}
-                      disabled={isDeleting}
                     >
-                      Elimina
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingIndex(index);
+                      {index + 1}.
+                    </div>
+                    <div
+                      style={{
+                        color: task.isCompleted ? "green" : "red",
+                        fontSize: 8,
                       }}
-                      disabled={isDeleting}
                     >
-                      Modifica
-                    </button>
+                      {task.isCompleted ? "V" : "X"}
+                    </div>
+                    <div
+                      style={{
+                        // width: 100,
+                        flexGrow: 1,
+                      }}
+                    >
+                      {task.text}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                        marginTop: 3,
+                        marginBottom: 3,
+                      }}
+                    >
+                      <Button
+                        onClick={() => {
+                          deleteWithApi(task, index);
+                        }}
+                        disabled={isDeleting}
+                        // danger
+                        color="red"
+                        variant="solid"
+                        icon={<DeleteOutlined />}
+                        iconPlacement="end"
+                      >
+                        Elimina
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setEditingIndex(index);
+                        }}
+                        icon={<EditOutlined />}
+                        disabled={isDeleting}
+                      >
+                        Modifica
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
-              <CreateTask
-                onClick={(task) => {
-                  const newList = tasks.concat(task);
-                  setTasks(newList);
-                }}
-              />
-              {editingIndex !== null && (
-                <UpdateTask
-                  task={tasks[editingIndex]!}
-                  onTaskUpdated={(updatedTask) => {
-                    const updatedTasks = tasks.map((task, index) => (index === editingIndex ? updatedTask : task));
-                    setTasks(updatedTasks);
-                    setEditingIndex(null);
+                ))}
+                <CreateTask
+                  onClick={(task) => {
+                    const newList = tasks.concat(task);
+                    setTasks(newList);
                   }}
                 />
-              )}
-            </div>
+                {editingIndex !== null && (
+                  <UpdateTask
+                    task={tasks[editingIndex]!}
+                    onTaskUpdated={(updatedTask) => {
+                      const updatedTasks = tasks.map((task, index) => (index === editingIndex ? updatedTask : task));
+                      setTasks(updatedTasks);
+                      setEditingIndex(null);
+                    }}
+                  />
+                )}
+              </div>
+            )
           )}
         </div>
       </TasksContext.Provider>
@@ -203,16 +219,17 @@ function CreateTask(props: CreateTaskProps) {
   return (
     <div className="box">
       <div style={{ fontWeight: "bold" }}>CreateTask</div>
-      <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-      <button
+      <Input type="text" value={text} onChange={(e) => setText(e.target.value)} />
+      <Button
         onClick={() => {
           const newTask: Task = { text: text, isCompleted: false };
           onClick(newTask);
           setText("");
         }}
+        type="primary"
       >
         Create
-      </button>
+      </Button>
     </div>
   );
 }
