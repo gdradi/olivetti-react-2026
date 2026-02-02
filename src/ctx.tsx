@@ -85,7 +85,7 @@ export function C1() {
         margin: 4,
       }}
     >
-      <XContext.Provider value={{ x, setX }}>
+      <XContext.Provider value={{ x: x, setX: setX }}>
         <h2>C1</h2>
         <C2 x={x} />
         <C4 x={x} setX={setX} />
